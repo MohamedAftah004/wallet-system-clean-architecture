@@ -17,7 +17,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Wallets\Commands\FreezeWallet\" />
     <Folder Include="Wallets\Queries\GetUserWallets\" />
   </ItemGroup>
 

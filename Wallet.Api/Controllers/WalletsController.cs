@@ -6,6 +6,7 @@ using Wallet.Application.Users.Commands.RegisterUser;
 using Wallet.Application.Wallets.Commands.ActivateWallet;
 using Wallet.Application.Wallets.Commands.CloseWallet;
 using Wallet.Application.Wallets.Commands.CreateWallet;
+using Wallet.Application.Wallets.Commands.FreezeWallet;
 using Wallet.Application.Wallets.Queries.GetWalletInfoById;
 
 namespace Wallet.Api.Controllers
@@ -81,6 +82,21 @@ namespace Wallet.Api.Controllers
         public async Task<IActionResult> CloseWallet(Guid walletId, CancellationToken cancellationToken)
         {
             await _mediator.Send(new CloseWalletCommand(walletId), cancellationToken);
+            return NoContent();
+        }
+
+
+
+        /// <summary>
+        /// Freeze a wallet (temporarily suspend transactions).
+        /// </summary>
+        /// <param name="walletId"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [HttpPut("{walletId:guid}/freeze")]
+        public async Task<IActionResult> FreezeWallet(Guid walletId, CancellationToken cancellationToken)
+        {
+            await _mediator.Send(new FreezeWalletCommand(walletId), cancellationToken);
             return NoContent();
         }
     }
