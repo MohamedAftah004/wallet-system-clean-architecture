@@ -7,6 +7,7 @@ using Wallet.Application.Wallets.Commands.ActivateWallet;
 using Wallet.Application.Wallets.Commands.CloseWallet;
 using Wallet.Application.Wallets.Commands.CreateWallet;
 using Wallet.Application.Wallets.Commands.FreezeWallet;
+using Wallet.Application.Wallets.Queries.GetUserWallets;
 using Wallet.Application.Wallets.Queries.GetWalletInfoById;
 
 namespace Wallet.Api.Controllers
@@ -39,20 +40,6 @@ namespace Wallet.Api.Controllers
             
 
             return CreatedAtAction(nameof(GetById), new { walletId = result.WalletId }, result);
-        }
-
-
-        /// <summary>
-        /// Get wallet info by ID (used by CreatedAtAction)
-        /// </summary>
-        [HttpGet("{walletId:guid}")]
-        public async Task<IActionResult> GetById(Guid walletId, CancellationToken cancellationToken)
-        {
-
-            var query = new GetWalletInfoByIdQuery(walletId);
-            var result = await _mediator.Send(query, cancellationToken);
-
-            return Ok(result);
         }
 
 
@@ -99,5 +86,32 @@ namespace Wallet.Api.Controllers
             await _mediator.Send(new FreezeWalletCommand(walletId), cancellationToken);
             return NoContent();
         }
+
+        /// <summary>
+        /// Get wallet info by ID (used by CreatedAtAction)
+        /// </summary>
+        [HttpGet("{walletId:guid}")]
+        public async Task<IActionResult> GetById(Guid walletId, CancellationToken cancellationToken)
+        {
+
+            var query = new GetWalletInfoByIdQuery(walletId);
+            var result = await _mediator.Send(query, cancellationToken);
+
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Get all wallets that belong to a specific user.
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [HttpGet("user/{userId:guid}")]
+        public async Task<IActionResult> GetUserWallets(Guid userId, CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(new GetUserWalletsQuery(userId), cancellationToken);
+            return Ok(result);
+        }
+
     }
 }
