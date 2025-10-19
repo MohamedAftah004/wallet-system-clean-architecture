@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Wallet.Application.Transactions.History.Queries.GetTransactions;
 using Wallet.Application.Transactions.Payments.Commands.MakePayment;
 using Wallet.Application.Transactions.Payments.Queries.GetWalletBalance;
 using Wallet.Application.Transactions.Refunds.Commands.RefundTransaction;
@@ -87,7 +88,7 @@ namespace Wallet.Api.Controllers
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpPost("refund/{transactionId:guid}")]
-        public async Task<IActionResult> RefundTransaction(Guid transactionId , CancellationToken cancellationToken)
+        public async Task<IActionResult> RefundTransaction(Guid transactionId, CancellationToken cancellationToken)
         {
             await _mediator.Send(new RefundTransactionCommand(transactionId), cancellationToken);
             return Ok(new { Message = "Refund processed successfully." });
@@ -101,11 +102,43 @@ namespace Wallet.Api.Controllers
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpGet("wallets/{walletId}/refunds")]
-        public async Task<IActionResult> GetRefundsByWalletId(Guid walletId , CancellationToken cancellationToken)
+        public async Task<IActionResult> GetRefundsByWalletId(Guid walletId, CancellationToken cancellationToken)
         {
-            var refunds = await _mediator.Send(new GetRefundsByWalletIdQuery(walletId) , cancellationToken);
+            var refunds = await _mediator.Send(new GetRefundsByWalletIdQuery(walletId), cancellationToken);
             return Ok(refunds);
         }
 
+
+
+        /// <summary>
+        /// Retrieves a paginated list of transactions for a specific wallet, with optional filtering by type, status, and date range.
+        /// </summary>
+        /// <param name="walletId">The unique identifier of the wallet.</param>
+        /// <param name="type">Transaction type (TopUp, Payment, Refund).</param>
+        /// <param name="status">Transaction status (Pending, Completed, Failed).</param>
+        /// <param name="fromDate">Start date filter.</param>
+        /// <param name="toDate">End date filter.</param>
+        /// <param name="page">Page number (default = 1).</param>
+        /// <param name="size">Page size (default = 20).</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>A paginated list of transactions.</returns>
+        [HttpGet("wallets/{walletId}/transactions")]
+        public async Task<IActionResult> GetTransactions(
+            Guid walletId,
+            [FromQuery] string? type,
+            [FromQuery] string? status,
+            [FromQuery] DateTime? fromDate,
+            [FromQuery] DateTime? toDate,
+            [FromQuery] int page = 1,
+            [FromQuery] int size = 20,
+            CancellationToken cancellationToken = default
+            )
+        {
+            var query = new GetTransactionsQuery(walletId, type, status, fromDate, toDate, page, size );
+            var result = await _mediator.Send(query , cancellationToken);
+            return Ok(result);
+        }
+    
     }
+
 }

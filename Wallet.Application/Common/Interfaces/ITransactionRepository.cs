@@ -12,5 +12,7 @@ namespace Wallet.Application.Common.Interfaces
         Task<Transaction?> GetByIdAsync(Guid transactionId, CancellationToken cancellationToken = default);
         Task<IEnumerable<Transaction>> GetByWalletIdAsync(Guid walletId, CancellationToken cancellationToken = default);
         Task UpdateAsync(Transaction transaction, CancellationToken cancellationToken = default);
+
+        IQueryable<Transaction> Query();
     }
 }

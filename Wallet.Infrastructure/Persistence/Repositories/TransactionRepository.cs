@@ -64,5 +64,12 @@ namespace Wallet.Infrastructure.Persistence.Repositories
         {
             throw new NotImplementedException();
         }
+
+
+
+        public IQueryable<Transaction> Query()
+        {
+            return _dbContext.Transactions.AsQueryable();
+        }
     }
 }

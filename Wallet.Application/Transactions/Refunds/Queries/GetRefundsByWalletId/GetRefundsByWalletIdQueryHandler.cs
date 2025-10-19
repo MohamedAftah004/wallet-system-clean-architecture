@@ -24,7 +24,7 @@ namespace Wallet.Application.Transactions.Refunds.Queries.GetRefundsByWalletId
         {
             var transactions = await _transactionRepository.GetByWalletIdAsync(request.WalletId, cancellationToken);
 
-            var refunds = transactions.Where(t => t.Type == TransactionType.Refund)
+            var refunds = transactions.Where(t => t.Status == TransactionStatus.Reversed)
                 .Select(t => new RefundDto
                 {
                     Id = t.Id,
