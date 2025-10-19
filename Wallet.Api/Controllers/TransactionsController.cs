@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Wallet.Application.Transactions.Payments.Commands.MakePayment;
 using Wallet.Application.Transactions.Payments.Queries.GetWalletBalance;
+using Wallet.Application.Transactions.Refunds.Commands.RefundTransaction;
 using Wallet.Application.Transactions.TopUp.Commands.TopUpWallet;
 using Wallet.Application.Transactions.TopUp.Queries.GetTransactionById;
 
@@ -76,6 +77,21 @@ namespace Wallet.Api.Controllers
             var result = await _mediator.Send(query, cancellationToken);
             return Ok(result);
         }
+
+
+        /// <summary>
+        /// Processes a refund for the specified transaction.
+        /// </summary>
+        /// <param name="transactionId"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [HttpPost("refund/{transactionId:guid}")]
+        public async Task<IActionResult> RefundTransaction(Guid transactionId , CancellationToken cancellationToken)
+        {
+            await _mediator.Send(new RefundTransactionCommand(transactionId), cancellationToken);
+            return Ok(new { Message = "Refund processed successfully." });
+        }
+
 
     }
 }

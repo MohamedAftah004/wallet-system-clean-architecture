@@ -17,7 +17,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Transactions\Refunds\Commands\" />
     <Folder Include="Transactions\Refunds\DTOs\" />
     <Folder Include="Transactions\Refunds\Queries\" />
   </ItemGroup>
