@@ -32,10 +32,12 @@ namespace Wallet.Infrastructure.Persistence.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
-                        .HasColumnType("text");
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
 
                     b.Property<string>("ReferenceId")
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<int>("Status")
                         .HasColumnType("integer");
@@ -53,7 +55,7 @@ namespace Wallet.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("WalletId");
 
-                    b.ToTable("Transactions");
+                    b.ToTable("Transactions", (string)null);
                 });
 
             modelBuilder.Entity("Wallet.Domain.Entities.User", b =>
@@ -153,6 +155,7 @@ namespace Wallet.Infrastructure.Persistence.Migrations
                                         .HasColumnName("Amount_CurrencyCode");
 
                                     b2.Property<string>("Symbol")
+                                        .IsRequired()
                                         .HasMaxLength(5)
                                         .HasColumnType("character varying(5)")
                                         .HasColumnName("Amount_CurrencySymbol");
@@ -169,34 +172,7 @@ namespace Wallet.Infrastructure.Persistence.Migrations
                                 .IsRequired();
                         });
 
-                    b.OwnsOne("Wallet.Domain.ValueObjects.Currency", "Currency", b1 =>
-                        {
-                            b1.Property<Guid>("TransactionId")
-                                .HasColumnType("uuid");
-
-                            b1.Property<string>("Code")
-                                .IsRequired()
-                                .HasMaxLength(3)
-                                .HasColumnType("character varying(3)")
-                                .HasColumnName("Currency_Code");
-
-                            b1.Property<string>("Symbol")
-                                .HasMaxLength(5)
-                                .HasColumnType("character varying(5)")
-                                .HasColumnName("Currency_Symbol");
-
-                            b1.HasKey("TransactionId");
-
-                            b1.ToTable("Transactions");
-
-                            b1.WithOwner()
-                                .HasForeignKey("TransactionId");
-                        });
-
                     b.Navigation("Amount")
-                        .IsRequired();
-
-                    b.Navigation("Currency")
                         .IsRequired();
 
                     b.Navigation("Wallet");

@@ -26,6 +26,7 @@ namespace Wallet.Infrastructure.DependencyInjection
             //repo
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IWalletRepository , WalletRepository>();
+            services.AddScoped<ITransactionRepository , TransactionRepository>();
             //security
             services.AddScoped<IPasswordHasher, PasswordHasher>();
 

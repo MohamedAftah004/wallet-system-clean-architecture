@@ -8,6 +8,8 @@ namespace Wallet.Infrastructure.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<Transaction> builder)
         {
+            builder.ToTable("Transactions");
+
             builder.HasKey(t => t.Id);
 
             builder.Property(t => t.WalletId)
@@ -19,8 +21,19 @@ namespace Wallet.Infrastructure.Persistence.Configurations
             builder.Property(t => t.Status)
                    .IsRequired();
 
+            builder.Property(t => t.ReferenceId)
+                   .HasMaxLength(100)
+                   .IsRequired(false);
+
+            builder.Property(t => t.Description)
+                   .HasMaxLength(255)
+                   .IsRequired(false);
+
             builder.Property(t => t.CreatedAt)
                    .IsRequired();
+
+            builder.Property(t => t.UpdatedAt)
+                   .IsRequired(false);
 
             // 🟢 Owned type configuration for Money
             builder.OwnsOne(t => t.Amount, amount =>
@@ -38,24 +51,15 @@ namespace Wallet.Infrastructure.Persistence.Configurations
 
                     currency.Property(c => c.Symbol)
                             .HasColumnName("Amount_CurrencySymbol")
-                            .HasMaxLength(5)
-                            .IsRequired(false);
+                            .HasMaxLength(5);
                 });
             });
 
-            // 🟢 Owned type configuration for Transaction.Currency (إن وجدت)
-            builder.OwnsOne(t => t.Currency, currency =>
-            {
-                currency.Property(c => c.Code)
-                        .HasColumnName("Currency_Code")
-                        .HasMaxLength(3)
-                        .IsRequired();
-
-                currency.Property(c => c.Symbol)
-                        .HasColumnName("Currency_Symbol")
-                        .HasMaxLength(5)
-                        .IsRequired(false);
-            });
+            // 🔗 العلاقة مع Wallet
+            builder.HasOne(t => t.Wallet)
+                   .WithMany(w => w.Transactions)
+                   .HasForeignKey(t => t.WalletId)
+                   .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

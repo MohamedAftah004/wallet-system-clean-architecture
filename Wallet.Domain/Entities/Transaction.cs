@@ -17,7 +17,6 @@ namespace Wallet.Domain.Entities
 
         public Guid WalletId { get; private set; }
         public Money Amount { get; private set; }
-        public Currency Currency { get; private set; }
         public TransactionType Type { get; private set; }
         public string? ReferenceId { get; private set; }
         public string? Description { get; private set; }

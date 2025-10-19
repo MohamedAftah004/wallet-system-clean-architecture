@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Wallet.Infrastructure.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class AddCurrencyColumnsToWallet : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -61,12 +61,10 @@ namespace Wallet.Infrastructure.Persistence.Migrations
                     WalletId = table.Column<Guid>(type: "uuid", nullable: false),
                     Amount_Value = table.Column<decimal>(type: "numeric", nullable: false),
                     Amount_CurrencyCode = table.Column<string>(type: "character varying(3)", maxLength: 3, nullable: false),
-                    Amount_CurrencySymbol = table.Column<string>(type: "character varying(5)", maxLength: 5, nullable: true),
-                    Currency_Code = table.Column<string>(type: "character varying(3)", maxLength: 3, nullable: false),
-                    Currency_Symbol = table.Column<string>(type: "character varying(5)", maxLength: 5, nullable: true),
+                    Amount_CurrencySymbol = table.Column<string>(type: "character varying(5)", maxLength: 5, nullable: false),
                     Type = table.Column<int>(type: "integer", nullable: false),
-                    ReferenceId = table.Column<string>(type: "text", nullable: true),
-                    Description = table.Column<string>(type: "text", nullable: true),
+                    ReferenceId = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    Description = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
                     Status = table.Column<int>(type: "integer", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
