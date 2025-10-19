@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Wallet.Application.Transactions.Payments.Commands.MakePayment;
+using Wallet.Application.Transactions.Payments.Queries.GetWalletBalance;
 using Wallet.Application.Transactions.TopUp.Commands.TopUpWallet;
 using Wallet.Application.Transactions.TopUp.Queries.GetTransactionById;
 
@@ -55,10 +56,26 @@ namespace Wallet.Api.Controllers
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpPost("payment")]
-        public async Task<IActionResult> MakePayment([FromBody] MakePaymentCommand command , CancellationToken cancellationToken)
+        public async Task<IActionResult> MakePayment([FromBody] MakePaymentCommand command, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(new MakePaymentCommand(command.WalletId, command.Amount, command.Description), cancellationToken);
             return Ok(result);
         }
+
+
+        /// <summary>
+        /// Retrieves the current balance of a specific wallet byy it,s id
+        /// </summary>
+        /// <param name="walletId"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [HttpGet("{walletId}/balance")]
+        public async Task<IActionResult> GetBalance(Guid walletId, CancellationToken cancellationToken)
+        {
+            var query = new GetWalletBalanceQuery(walletId);
+            var result = await _mediator.Send(query, cancellationToken);
+            return Ok(result);
+        }
+
     }
 }
