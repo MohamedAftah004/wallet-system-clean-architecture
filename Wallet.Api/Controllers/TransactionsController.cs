@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Wallet.Application.Transactions.Payments.Commands.MakePayment;
 using Wallet.Application.Transactions.Payments.Queries.GetWalletBalance;
 using Wallet.Application.Transactions.Refunds.Commands.RefundTransaction;
+using Wallet.Application.Transactions.Refunds.Queries.GetRefundsByWalletId;
 using Wallet.Application.Transactions.TopUp.Commands.TopUpWallet;
 using Wallet.Application.Transactions.TopUp.Queries.GetTransactionById;
 
@@ -92,6 +93,19 @@ namespace Wallet.Api.Controllers
             return Ok(new { Message = "Refund processed successfully." });
         }
 
+
+        /// <summary>
+        /// Retrieves all the refunds processed of a specific wallet
+        /// </summary>
+        /// <param name="walletId"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [HttpGet("wallets/{walletId}/refunds")]
+        public async Task<IActionResult> GetRefundsByWalletId(Guid walletId , CancellationToken cancellationToken)
+        {
+            var refunds = await _mediator.Send(new GetRefundsByWalletIdQuery(walletId) , cancellationToken);
+            return Ok(refunds);
+        }
 
     }
 }
