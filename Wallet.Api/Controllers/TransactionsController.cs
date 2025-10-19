@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Wallet.Application.Transactions.Payments.Commands.MakePayment;
 using Wallet.Application.Transactions.TopUp.Commands.TopUpWallet;
 using Wallet.Application.Transactions.TopUp.Queries.GetTransactionById;
 
@@ -43,6 +44,20 @@ namespace Wallet.Api.Controllers
         {
             var query = new GetTransactionByIdQuery(transactionId);
             var result = await _mediator.Send(query, cancellationToken);
+            return Ok(result);
+        }
+
+
+        /// <summary>
+        /// Processes a wallet payment reqoest.
+        /// </summary>
+        /// <param name="command"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [HttpPost("payment")]
+        public async Task<IActionResult> MakePayment([FromBody] MakePaymentCommand command , CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(new MakePaymentCommand(command.WalletId, command.Amount, command.Description), cancellationToken);
             return Ok(result);
         }
     }

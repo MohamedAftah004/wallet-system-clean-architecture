@@ -17,8 +17,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Transactions\Payments\Commands\" />
-    <Folder Include="Transactions\Payments\DTOs\" />
     <Folder Include="Transactions\Payments\Queries\" />
     <Folder Include="Transactions\Refunds\Commands\" />
     <Folder Include="Transactions\Refunds\DTOs\" />
