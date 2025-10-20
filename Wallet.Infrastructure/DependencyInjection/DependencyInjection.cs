@@ -29,6 +29,7 @@ namespace Wallet.Infrastructure.DependencyInjection
             services.AddScoped<ITransactionRepository , TransactionRepository>();
             //security
             services.AddScoped<IPasswordHasher, PasswordHasher>();
+            services.AddScoped<IJwtTokenService, JwtTokenService>();
 
             return services;
         }

@@ -31,11 +31,15 @@ namespace Wallet.Application.Users.Commands.RegisterUser
             if(await _userRepository.ExsistByPhoneAsync(request.PhoneNumber, cancellationToken))
                 throw new DuplicatePhoneException(request.PhoneNumber);
 
+
+            var hashedPassword = _passwordHasher.Hash(request.Password);
+
+
             var user = new User(
                 request.FullName,
                 request.Email,
                 request.PhoneNumber,
-                request.Password
+                hashedPassword
                 );
 
 
