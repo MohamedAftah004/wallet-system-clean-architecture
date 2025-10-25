@@ -16,5 +16,9 @@ namespace Wallet.Application.Transactions.TopUp.DTOs
         public string Status { get; set; } = string.Empty;
         public string? Description { get; set; }
         public DateTime CreatedAt { get; set; }
+
+
+        public string? UserFullName { get; set; }
+
     }
 }

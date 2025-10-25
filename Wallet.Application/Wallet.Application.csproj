@@ -22,7 +22,6 @@
   <ItemGroup>
     <Folder Include="Security\Commands\Logout\" />
     <Folder Include="Security\Commands\RefreshToken\" />
-    <Folder Include="Transactions\History\Queries\GetRecentTransactions\" />
   </ItemGroup>
 
 </Project>

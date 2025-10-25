@@ -1,6 +1,8 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Wallet.Application.Transactions.History.Queries.GetAllTransactionsInfo;
+using Wallet.Application.Transactions.History.Queries.GetRecentTransactions;
 using Wallet.Application.Transactions.History.Queries.GetTransactions;
 using Wallet.Application.Transactions.Payments.Commands.MakePayment;
 using Wallet.Application.Transactions.Payments.Queries.GetWalletBalance;
@@ -138,7 +140,36 @@ namespace Wallet.Api.Controllers
             var result = await _mediator.Send(query , cancellationToken);
             return Ok(result);
         }
-    
+
+
+        /// <summary>
+        /// Retrieves all transactions (for admin use).
+        /// </summary>
+        [HttpGet("all")]
+        public async Task<IActionResult> GetAllTransactions(
+            [FromQuery] string? type,
+            [FromQuery] string? status,
+            [FromQuery] DateTime? fromDate,
+            [FromQuery] DateTime? toDate,
+            [FromQuery] int page = 1,
+            [FromQuery] int size = 20)
+        {
+            var query = new GetAllTransactionsInfoQuery(type, status, fromDate, toDate, page, size);
+            var result = await _mediator.Send(query);
+            return Ok(result);
+        }
+        /// <summary>
+        /// Retrieves the most recent transactions (optionally for a specific wallet).
+        /// </summary>
+        [HttpGet("recent")]
+        public async Task<IActionResult> GetRecentTransactions(
+            [FromQuery] Guid? walletId,
+            [FromQuery] int count = 5)
+        {
+            var query = new GetRecentTransactionsQuery(walletId, count);
+            var result = await _mediator.Send(query);
+            return Ok(result);
+        }
     }
 
 }
