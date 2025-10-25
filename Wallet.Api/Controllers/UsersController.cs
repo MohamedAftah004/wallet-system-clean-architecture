@@ -9,6 +9,7 @@ using Wallet.Application.Users.Commands.DisableUser;
 using Wallet.Application.Users.Commands.FreezeUser;
 using Wallet.Application.Users.Commands.RegisterUser;
 using Wallet.Application.Users.Queries.GetAllUsersInfo;
+using Wallet.Application.Users.Queries.GetUserDashboard;
 using Wallet.Application.Users.Queries.GetUserInfoByEmail;
 using Wallet.Application.Users.Queries.GetUserInfoById;
 using Wallet.Application.Users.Queries.GetUserInfoByPhone;
@@ -204,6 +205,15 @@ namespace Wallet.Api.Controllers
             };
 
             return Ok(response);
+        }
+
+        // GET: /api/users/{userId}/dashboard
+        [HttpGet("{userId}/dashboard")]
+        public async Task<IActionResult> GetUserDashboard(Guid userId, CancellationToken cancellationToken)
+        {
+            var query = new GetUserDashboardQuery(userId);
+            var result = await _mediator.Send(query, cancellationToken);
+            return Ok(result);
         }
     }
 

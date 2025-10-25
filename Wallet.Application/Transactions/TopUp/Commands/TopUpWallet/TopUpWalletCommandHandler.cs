@@ -1,9 +1,5 @@
 ﻿using MediatR;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Wallet.Application.Common.Interfaces;
 using Wallet.Application.Transactions.TopUp.DTOs;
 using Wallet.Domain.Enums;
@@ -41,10 +37,12 @@ namespace Wallet.Application.Transactions.TopUp.Commands.TopUpWallet
                 amount: money,
                 type: TransactionType.TopUp,
                 description: request.Description
-            );
 
+            );
+            
             wallet.TopUp(request.Amount);
 
+            transaction.MarkCompleted();
             await _transactionRepository.AddAsync(transaction, cancellationToken);
             await _walletRepository.UpdateAsync(wallet, cancellationToken);
 
@@ -55,7 +53,7 @@ namespace Wallet.Application.Transactions.TopUp.Commands.TopUpWallet
                 Amount = request.Amount,
                 CurrencyCode = currency.Code,
                 Type = transaction.Type.ToString(),
-                Status = TransactionStatus.Completed.ToString(),
+                Status = transaction.Status.ToString(),
                 Description = transaction.Description,
                 CreatedAt = transaction.CreatedAt
             };
