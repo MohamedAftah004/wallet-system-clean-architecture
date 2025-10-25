@@ -8,8 +8,9 @@ using Wallet.Application.Users.Commands.CloseUser;
 using Wallet.Application.Users.Commands.DisableUser;
 using Wallet.Application.Users.Commands.FreezeUser;
 using Wallet.Application.Users.Commands.RegisterUser;
-using Wallet.Application.Users.Queries.GetUserInfoById;
+using Wallet.Application.Users.Queries.GetAllUsersInfo;
 using Wallet.Application.Users.Queries.GetUserInfoByEmail;
+using Wallet.Application.Users.Queries.GetUserInfoById;
 using Wallet.Application.Users.Queries.GetUserInfoByPhone;
 
 namespace Wallet.Api.Controllers
@@ -116,6 +117,22 @@ namespace Wallet.Api.Controllers
 
 
 
+
+        /// <summary>
+        /// Retrieves a paginated list of users.
+        /// </summary>
+        /// <param name="page">Page number (default = 1)</param>
+        /// <param name="size">Number of items per page (default = 10)</param>
+        /// <returns>Paged list of users</returns>
+        [HttpGet]
+        public async Task<IActionResult> GetAllUsers([FromQuery] int page = 1, [FromQuery] int size = 10)
+        {
+            var query = new GetAllUsersInfoQuery(page, size);
+
+            var result = await _mediator.Send(query);
+
+            return Ok(result);
+        }
 
 
         /// <summary>

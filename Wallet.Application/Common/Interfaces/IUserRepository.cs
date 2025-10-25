@@ -22,6 +22,7 @@ namespace Wallet.Application.Common.Interfaces
         Task<User?> GetByPhoneAsync(string phone, CancellationToken cancellationToken = default);
         //email
         Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default);
+        IQueryable<User> Query();
 
         //status operations
         //activate

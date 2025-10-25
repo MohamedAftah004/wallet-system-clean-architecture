@@ -28,6 +28,8 @@ namespace Wallet.Infrastructure.Persistence.Repositories
 
         }
 
+        public IQueryable<User> Query() => _dbContext.Users.AsQueryable();
+
         public async Task ActivateAsync(Guid userId, CancellationToken cancellationToken = default)
         {
             var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == userId, cancellationToken);
