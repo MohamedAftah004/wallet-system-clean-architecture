@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Wallet.Application.Common.Interfaces;
+using Wallet.Application.Common.Services;
 using Wallet.Domain.Enums;
 
 namespace Wallet.Application.Transactions.Refunds.Commands.RefundTransaction
@@ -14,11 +15,12 @@ namespace Wallet.Application.Transactions.Refunds.Commands.RefundTransaction
 
         private readonly ITransactionRepository _transactionRepository;
         private readonly IWalletRepository _walletRepository;
-
-        public RefundTransactionCommandHandler(ITransactionRepository transactionRepository, IWalletRepository walletRepository)
+        private readonly IUserValidator _userValidator;
+        public RefundTransactionCommandHandler(ITransactionRepository transactionRepository, IWalletRepository walletRepository , IUserValidator userValidator)
         {
             _transactionRepository = transactionRepository;
             _walletRepository = walletRepository;
+            _userValidator = userValidator;
         }
 
         public async Task<Unit> Handle(RefundTransactionCommand request, CancellationToken cancellationToken)
@@ -41,6 +43,9 @@ namespace Wallet.Application.Transactions.Refunds.Commands.RefundTransaction
             var wallet = await _walletRepository.GetByIdAsync(transaction.WalletId, cancellationToken);
             if (wallet == null)
                 throw new InvalidOperationException("Associated wallet not found.");
+
+            await _userValidator.EnsureUserIsActiveAsync(wallet.UserId, cancellationToken);
+
 
             wallet.TopUp(transaction.Amount.Amount);
 

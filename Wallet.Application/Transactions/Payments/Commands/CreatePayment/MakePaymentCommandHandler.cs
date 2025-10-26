@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Wallet.Application.Common.Interfaces;
+using Wallet.Application.Common.Services;
 using Wallet.Application.Transactions.Payments.DTOs;
 using Wallet.Domain.Entities;
 using Wallet.Domain.Enums;
@@ -17,11 +18,12 @@ namespace Wallet.Application.Transactions.Payments.Commands.MakePayment
 
         private readonly IWalletRepository _walletRepository;
         private readonly ITransactionRepository _transactionRepository;
-
-        public MakePaymentCommandHandler(IWalletRepository walletRepository, ITransactionRepository transactionRepository)
+        private readonly IUserValidator _userValidator;
+        public MakePaymentCommandHandler(IWalletRepository walletRepository, ITransactionRepository transactionRepository , IUserValidator userValidator)
         {
             _walletRepository = walletRepository;
             _transactionRepository = transactionRepository;
+            _userValidator = userValidator;
         }
 
         public async Task<PaymentResponseDto> Handle(MakePaymentCommand request, CancellationToken cancellationToken)
@@ -35,6 +37,8 @@ namespace Wallet.Application.Transactions.Payments.Commands.MakePayment
 
             if (wallet.Balance.Amount < request.Amount)
                 throw new InvalidOperationException("Insufficient balance.");
+ 
+            await _userValidator.EnsureUserIsActiveAsync(wallet.UserId, cancellationToken);
 
             var money = Money.Create(request.Amount, wallet.Balance.Currency);
 

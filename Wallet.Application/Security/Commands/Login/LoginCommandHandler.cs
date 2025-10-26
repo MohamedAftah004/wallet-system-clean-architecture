@@ -46,7 +46,8 @@ namespace Wallet.Application.Security.Commands.Login
                 UserId = user.Id,
                 Email = user.Email,
                 AccessToken = accessToken,
-                RefreshToken = refreshToken
+                RefreshToken = refreshToken,
+                Status = user.UserStatus.ToString()
             };
 
         }

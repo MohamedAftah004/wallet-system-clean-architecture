@@ -1,5 +1,7 @@
-using Wallet.Infrastructure.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
 using Wallet.Application;
+using Wallet.Infrastructure.DependencyInjection;
+using Wallet.Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,12 +9,14 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddApplication();
 builder.Services.AddInftrastructure(builder.Configuration);
 
-// ? Add CORS policy
+
+
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngular", policy =>
     {
-        policy.WithOrigins("http://localhost:4200") // Angular dev server
+        policy.WithOrigins("http://localhost:4200") 
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
@@ -24,8 +28,7 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// ? Use CORS *before* mapping controllers
-app.UseCors("AllowAngular");
+ app.UseCors("AllowAngular");
 
 if (app.Environment.IsDevelopment())
 {
